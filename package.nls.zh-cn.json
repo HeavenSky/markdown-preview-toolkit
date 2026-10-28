@@ -1,0 +1,23 @@
+{
+	"extension.description": "在内置 Markdown 预览中渲染 Mermaid 与 Kroki 图表, 目录, 任务列表与 GitHub 风格语法.",
+	"config.mermaid.enabled": "用 beautiful-mermaid 渲染 `mermaid` 代码块; 它不支持的图类型交给内置 Mermaid 渲染.",
+	"config.mermaid.lightTheme": "浅色与高对比度浅色主题下使用的 beautiful-mermaid 主题. `vscode` 表示跟随当前配色主题的颜色.",
+	"config.mermaid.darkTheme": "深色与高对比度深色主题下使用的 beautiful-mermaid 主题. `vscode` 表示跟随当前配色主题的颜色.",
+	"category": "Markdown Preview Toolkit",
+	"command.clearDiagramCache": "清空图表缓存并刷新预览",
+	"config.kroki.enabled": "用 Kroki 渲染 `plantuml`, `graphviz`, `d2` 等图表代码块.",
+	"config.kroki.server": "Kroki 服务器地址. 默认的公共服务器会收到你预览的每张图的源码; 改成自建服务器(例如 `http://localhost:8000`)即可让图表留在本机.",
+	"config.kroki.timeout": "等待 Kroki 服务器响应的时长, 单位毫秒.",
+	"config.kroki.languages": "把更多代码块语言映射到 Kroki 图类型, 例如 `{ \"uml\": \"plantuml\" }`. 映射为空字符串则不再渲染该语言.",
+	"config.toc.minLevel": "目录收录的最小标题级别.",
+	"config.toc.maxLevel": "目录收录的最大标题级别.",
+	"config.toc.sidebar": "在预览右侧显示可折叠的目录栏.",
+	"config.taskList.enabled": "把列表项开头的 `[ ]` 与 `[x]` 显示为勾选框.",
+	"config.taskList.clickToToggle": "在预览里点击勾选框即可勾选或取消 Markdown 源码中的任务. 文件会被修改但不会自动保存.",
+	"config.alerts.enabled": "渲染 `> [!NOTE]`, `> [!WARNING]` 等 GitHub 提示块.",
+	"config.footnotes.enabled": "渲染 `[^1]` 形式的脚注.",
+	"config.emoji.enabled": "渲染 `:smile:` 等 Emoji 短码.",
+	"config.syntax.mark": "把 `==文字==` 渲染为高亮文字. 不属于 GitHub Markdown.",
+	"config.syntax.superscript": "把 `x^2^` 渲染为上标. 不属于 GitHub Markdown.",
+	"config.syntax.containers": "渲染 VitePress 风格的容器: `::: tip`, `::: info`, `::: warning`, `::: danger` 与 `::: details`, 名字后可跟自定义标题. 不属于 GitHub Markdown."
+}

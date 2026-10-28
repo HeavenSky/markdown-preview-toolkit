@@ -1,0 +1,23 @@
+{
+	"extension.description": "Render Mermaid and Kroki diagrams, tables of contents, task lists and GitHub-style syntax in the built-in Markdown preview.",
+	"config.mermaid.enabled": "Render `mermaid` code blocks with beautiful-mermaid. Diagram types it does not support are left to the built-in Mermaid renderer.",
+	"config.mermaid.lightTheme": "beautiful-mermaid theme used with light and high contrast light color themes. `vscode` follows the colors of your current color theme.",
+	"config.mermaid.darkTheme": "beautiful-mermaid theme used with dark and high contrast dark color themes. `vscode` follows the colors of your current color theme.",
+	"category": "Markdown Preview Toolkit",
+	"command.clearDiagramCache": "Clear Diagram Cache and Refresh Preview",
+	"config.kroki.enabled": "Render diagram code blocks such as `plantuml`, `graphviz` and `d2` with Kroki.",
+	"config.kroki.server": "Kroki server URL. The default public server receives the source of every diagram you preview; point this at a self-hosted server such as `http://localhost:8000` to keep diagrams on your machine.",
+	"config.kroki.timeout": "How long to wait for the Kroki server, in milliseconds.",
+	"config.kroki.languages": "Map extra code block languages to Kroki diagram types, for example `{ \"uml\": \"plantuml\" }`. Map a language to an empty string to stop rendering it.",
+	"config.toc.minLevel": "Smallest heading level included in the table of contents.",
+	"config.toc.maxLevel": "Largest heading level included in the table of contents.",
+	"config.toc.sidebar": "Show a collapsible table of contents on the right side of the preview.",
+	"config.taskList.enabled": "Show `[ ]` and `[x]` at the start of list items as checkboxes.",
+	"config.taskList.clickToToggle": "Clicking a checkbox in the preview checks or unchecks the task in the Markdown source. The file is changed but not saved.",
+	"config.alerts.enabled": "Render GitHub alerts such as `> [!NOTE]` and `> [!WARNING]`.",
+	"config.footnotes.enabled": "Render footnotes written as `[^1]`.",
+	"config.emoji.enabled": "Render emoji shortcodes such as `:smile:`.",
+	"config.syntax.mark": "Render `==text==` as highlighted text. Not part of GitHub Markdown.",
+	"config.syntax.superscript": "Render `x^2^` as superscript. Not part of GitHub Markdown.",
+	"config.syntax.containers": "Render VitePress-style containers: `::: tip`, `::: info`, `::: warning`, `::: danger` and `::: details`, each with an optional title. Not part of GitHub Markdown."
+}

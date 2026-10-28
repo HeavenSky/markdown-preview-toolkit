@@ -1,0 +1,147 @@
+/* GitHub 风格提示块与脚注。配色取自 GitHub 的浅色与深色主题。 */
+
+.markdown-alert {
+	--mtk-alert-color: #0969da;
+	margin: 0 0 16px;
+	padding: 8px 16px;
+	border-left: 0.25em solid var(--mtk-alert-color);
+	color: inherit;
+}
+
+.markdown-alert > :last-child {
+	margin-bottom: 0;
+}
+
+.markdown-alert-title {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	margin-bottom: 4px;
+	color: var(--mtk-alert-color);
+	font-weight: 600;
+	line-height: 1;
+}
+
+.markdown-alert-title .octicon {
+	fill: currentColor;
+	flex: none;
+}
+
+.markdown-alert-tip {
+	--mtk-alert-color: #1a7f37;
+}
+
+.markdown-alert-important {
+	--mtk-alert-color: #8250df;
+}
+
+.markdown-alert-warning {
+	--mtk-alert-color: #9a6700;
+}
+
+.markdown-alert-caution {
+	--mtk-alert-color: #d1242f;
+}
+
+.vscode-dark .markdown-alert-note,
+.vscode-high-contrast .markdown-alert-note {
+	--mtk-alert-color: #4493f8;
+}
+
+.vscode-dark .markdown-alert-tip,
+.vscode-high-contrast .markdown-alert-tip {
+	--mtk-alert-color: #3fb950;
+}
+
+.vscode-dark .markdown-alert-important,
+.vscode-high-contrast .markdown-alert-important {
+	--mtk-alert-color: #ab7df8;
+}
+
+.vscode-dark .markdown-alert-warning,
+.vscode-high-contrast .markdown-alert-warning {
+	--mtk-alert-color: #d29922;
+}
+
+.vscode-dark .markdown-alert-caution,
+.vscode-high-contrast .markdown-alert-caution {
+	--mtk-alert-color: #f85149;
+}
+
+.footnotes {
+	font-size: 0.9em;
+	color: var(--vscode-descriptionForeground, inherit);
+}
+
+.footnotes-sep {
+	margin-top: 32px;
+}
+
+/* 可选语法: ==高亮== 与 VitePress 风格容器。 */
+
+mark {
+	padding: 0 2px;
+	border-radius: 2px;
+	background: var(--vscode-editor-findMatchHighlightBackground, rgba(234, 92, 0, 0.33));
+	color: inherit;
+}
+
+.mtk-container {
+	--mtk-container-color: #0969da;
+	margin: 16px 0;
+	padding: 8px 16px;
+	border-left: 0.25em solid var(--mtk-container-color);
+	border-radius: 4px;
+	background: color-mix(in srgb, var(--mtk-container-color) 8%, transparent);
+}
+
+.mtk-container > :last-child {
+	margin-bottom: 0;
+}
+
+.mtk-container-title,
+.mtk-container-details > summary {
+	margin-bottom: 4px;
+	color: var(--mtk-container-color);
+	font-weight: 600;
+}
+
+.mtk-container-details > summary {
+	cursor: pointer;
+}
+
+.mtk-container-tip {
+	--mtk-container-color: #1a7f37;
+}
+
+.mtk-container-warning {
+	--mtk-container-color: #9a6700;
+}
+
+.mtk-container-danger {
+	--mtk-container-color: #d1242f;
+}
+
+.mtk-container-details {
+	--mtk-container-color: var(--vscode-descriptionForeground, #6e7781);
+}
+
+.vscode-dark .mtk-container-info,
+.vscode-high-contrast .mtk-container-info {
+	--mtk-container-color: #4493f8;
+}
+
+.vscode-dark .mtk-container-tip,
+.vscode-high-contrast .mtk-container-tip {
+	--mtk-container-color: #3fb950;
+}
+
+.vscode-dark .mtk-container-warning,
+.vscode-high-contrast .mtk-container-warning {
+	--mtk-container-color: #d29922;
+}
+
+.vscode-dark .mtk-container-danger,
+.vscode-high-contrast .mtk-container-danger {
+	--mtk-container-color: #f85149;
+}

@@ -1,0 +1,115 @@
+/* 本扩展渲染的图表块: mermaid 内联 SVG, Kroki 图片, 占位与错误块。 */
+
+.mtk-mermaid,
+.mtk-kroki {
+	margin: 16px 0;
+	text-align: center;
+}
+
+/* 多数 Kroki 引擎只输出黑线白底, 统一放在白底卡片上, 深色主题下依然可读。 */
+.mtk-kroki > svg {
+	padding: 16px;
+	border-radius: 6px;
+	background: #fff;
+	box-sizing: border-box;
+}
+
+.mtk-kroki-pending {
+	padding: 24px;
+	border: 1px dashed var(--vscode-editorWidget-border, rgba(128, 128, 128, 0.4));
+	border-radius: 6px;
+	color: var(--vscode-descriptionForeground, inherit);
+	font-style: italic;
+}
+
+.mtk-error {
+	margin: 16px 0;
+	padding: 8px 12px;
+	border-left: 4px solid var(--vscode-editorError-foreground, #f14c4c);
+	border-radius: 4px;
+	background: var(--vscode-inputValidation-errorBackground, rgba(241, 76, 76, 0.1));
+}
+
+.mtk-error-message {
+	margin: 0 0 8px;
+	color: var(--vscode-editorError-foreground, #f14c4c);
+	white-space: pre-wrap;
+	overflow-wrap: anywhere;
+}
+
+.mtk-error-source {
+	margin: 0;
+}
+
+/* 图表右上角的源码菜单(file-code 图标): 悬停或展开时显示, 菜单项是交给扩展处理的 vscode:// 链接。 */
+/* 容器按内容宽度居中, 菜单才贴在图的右上角而不是整行最右边 */
+.mtk-mermaid,
+.mtk-kroki {
+	position: relative;
+	width: fit-content;
+	max-width: 100%;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.mtk-diagram-tools {
+	position: absolute;
+	top: 4px;
+	right: 4px;
+	z-index: 1;
+	text-align: left;
+	opacity: 0;
+	transition: opacity 0.15s;
+}
+
+.mtk-mermaid:hover .mtk-diagram-tools,
+.mtk-kroki:hover .mtk-diagram-tools,
+.mtk-diagram-tools[open],
+.mtk-diagram-tools:focus-within {
+	opacity: 1;
+}
+
+.mtk-diagram-tools > summary {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3px;
+	border: 1px solid var(--vscode-editorWidget-border, rgba(128, 128, 128, 0.35));
+	border-radius: 4px;
+	background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+	color: var(--vscode-foreground, inherit);
+	line-height: 0;
+	list-style: none;
+	cursor: pointer;
+}
+
+.mtk-diagram-tools > summary::-webkit-details-marker {
+	display: none;
+}
+
+.mtk-diagram-tools-menu {
+	position: absolute;
+	top: calc(100% + 4px);
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	min-width: 120px;
+	padding: 4px 0;
+	border: 1px solid var(--vscode-editorWidget-border, rgba(128, 128, 128, 0.35));
+	border-radius: 4px;
+	background: var(--vscode-editorWidget-background, var(--vscode-editor-background));
+	box-shadow: 0 2px 8px var(--vscode-widget-shadow, rgba(0, 0, 0, 0.25));
+}
+
+.mtk-diagram-tools-item {
+	padding: 4px 12px;
+	color: var(--vscode-foreground, inherit);
+	font-size: 12px;
+	white-space: nowrap;
+	text-decoration: none;
+}
+
+.mtk-diagram-tools-item:hover {
+	background: var(--vscode-list-hoverBackground, rgba(128, 128, 128, 0.2));
+	text-decoration: none;
+}

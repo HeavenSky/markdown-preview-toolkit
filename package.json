@@ -1,0 +1,283 @@
+{
+	"name": "markdown-preview-toolkit",
+	"displayName": "Markdown Preview Toolkit",
+	"version": "0.0.1",
+	"description": "%extension.description%",
+	"categories": [
+		"Other",
+		"Visualization"
+	],
+	"keywords": [
+		"d2",
+		"diagram",
+		"emoji",
+		"footnote",
+		"github alerts",
+		"graphviz",
+		"kroki",
+		"markdown",
+		"markdown preview",
+		"mermaid",
+		"plantuml",
+		"table of contents",
+		"task list",
+		"toc"
+	],
+	"homepage": "https://github.com/HeavenSky/markdown-preview-toolkit",
+	"bugs": {
+		"url": "https://github.com/HeavenSky/markdown-preview-toolkit/issues"
+	},
+	"license": "MIT",
+	"author": {
+		"name": "calla",
+		"email": "aurora.calla@outlook.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/HeavenSky/markdown-preview-toolkit.git"
+	},
+	"publisher": "HeavenSky",
+	"files": [
+		"out/extension.js",
+		"l10n",
+		"media/icon.png",
+		"media/preview/diagram.css",
+		"media/preview/toc.css",
+		"media/preview/task-list.css",
+		"media/preview/syntax.css",
+		"media/preview/toc.js",
+		"package.nls.json",
+		"package.nls.zh-cn.json",
+		"LICENSE.txt",
+		"NOTICE.md",
+		"CHANGELOG.md"
+	],
+	"main": "./out/extension.js",
+	"scripts": {
+		"compile": "node build.mjs",
+		"build": "node build.mjs --production",
+		"watch": "node build.mjs --watch",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest run",
+		"lint": "oxlint --fix",
+		"lint:check": "oxlint --deny-warnings",
+		"fmt": "oxfmt --write",
+		"fmt:check": "oxfmt --check",
+		"check": "node scripts/check.mjs",
+		"gen:icon": "node scripts/gen-icon.mjs",
+		"package": "node scripts/package.mjs",
+		"vscode:prepublish": "npm run build",
+		"shots": "node scripts/shoot.mjs --readme"
+	},
+	"devDependencies": {
+		"@types/markdown-it": "^14.2.0",
+		"@types/markdown-it-container": "^4.0.1",
+		"@types/markdown-it-emoji": "^3.0.1",
+		"@types/markdown-it-footnote": "^3.0.4",
+		"@types/node": "^26.6.5",
+		"@vscode/vsce": "^4.0.0",
+		"beautiful-mermaid": "^1.1.3",
+		"esbuild": "^0.28.2",
+		"markdown-it": "^15.0.3",
+		"markdown-it-container": "^4.0.0",
+		"markdown-it-emoji": "^3.1.0",
+		"markdown-it-footnote": "^4.0.0",
+		"markdown-it-mark": "^4.0.0",
+		"markdown-it-sup": "^2.0.0",
+		"oxfmt": "^0.75.0",
+		"oxlint": "^1.90.0",
+		"playwright-core": "^1.64.1",
+		"sharp": "^0.35.5",
+		"typescript": "^7.0.2",
+		"vitest": "^5.0.5",
+		"vscode-types": "npm:@types/vscode"
+	},
+	"l10n": "./l10n",
+	"contributes": {
+		"markdown.markdownItPlugins": true,
+		"configuration": {
+			"title": "Markdown Preview Toolkit",
+			"properties": {
+				"markdownToolkit.mermaid.enabled": {
+					"type": "boolean",
+					"default": true,
+					"order": 0,
+					"description": "%config.mermaid.enabled%"
+				},
+				"markdownToolkit.mermaid.lightTheme": {
+					"type": "string",
+					"enum": [
+						"vscode",
+						"zinc-light",
+						"zinc-dark",
+						"tokyo-night",
+						"tokyo-night-storm",
+						"tokyo-night-light",
+						"catppuccin-mocha",
+						"catppuccin-latte",
+						"nord",
+						"nord-light",
+						"dracula",
+						"github-light",
+						"github-dark",
+						"solarized-light",
+						"solarized-dark",
+						"one-dark"
+					],
+					"default": "vscode",
+					"order": 1,
+					"description": "%config.mermaid.lightTheme%"
+				},
+				"markdownToolkit.mermaid.darkTheme": {
+					"type": "string",
+					"enum": [
+						"vscode",
+						"zinc-light",
+						"zinc-dark",
+						"tokyo-night",
+						"tokyo-night-storm",
+						"tokyo-night-light",
+						"catppuccin-mocha",
+						"catppuccin-latte",
+						"nord",
+						"nord-light",
+						"dracula",
+						"github-light",
+						"github-dark",
+						"solarized-light",
+						"solarized-dark",
+						"one-dark"
+					],
+					"default": "vscode",
+					"order": 2,
+					"description": "%config.mermaid.darkTheme%"
+				},
+				"markdownToolkit.kroki.enabled": {
+					"type": "boolean",
+					"default": true,
+					"order": 10,
+					"description": "%config.kroki.enabled%"
+				},
+				"markdownToolkit.kroki.server": {
+					"type": "string",
+					"default": "https://kroki.io",
+					"order": 11,
+					"markdownDescription": "%config.kroki.server%"
+				},
+				"markdownToolkit.kroki.timeout": {
+					"type": "number",
+					"default": 15000,
+					"minimum": 1000,
+					"order": 12,
+					"description": "%config.kroki.timeout%"
+				},
+				"markdownToolkit.kroki.languages": {
+					"type": "object",
+					"default": {},
+					"additionalProperties": {
+						"type": "string"
+					},
+					"order": 13,
+					"markdownDescription": "%config.kroki.languages%"
+				},
+				"markdownToolkit.toc.minLevel": {
+					"type": "integer",
+					"default": 1,
+					"minimum": 1,
+					"maximum": 6,
+					"order": 20,
+					"description": "%config.toc.minLevel%"
+				},
+				"markdownToolkit.toc.maxLevel": {
+					"type": "integer",
+					"default": 3,
+					"minimum": 1,
+					"maximum": 6,
+					"order": 21,
+					"description": "%config.toc.maxLevel%"
+				},
+				"markdownToolkit.toc.sidebar": {
+					"type": "boolean",
+					"default": true,
+					"order": 22,
+					"description": "%config.toc.sidebar%"
+				},
+				"markdownToolkit.taskList.enabled": {
+					"type": "boolean",
+					"default": true,
+					"order": 30,
+					"description": "%config.taskList.enabled%"
+				},
+				"markdownToolkit.taskList.clickToToggle": {
+					"type": "boolean",
+					"default": true,
+					"order": 31,
+					"description": "%config.taskList.clickToToggle%"
+				},
+				"markdownToolkit.alerts.enabled": {
+					"type": "boolean",
+					"default": true,
+					"order": 40,
+					"markdownDescription": "%config.alerts.enabled%"
+				},
+				"markdownToolkit.footnotes.enabled": {
+					"type": "boolean",
+					"default": true,
+					"order": 41,
+					"markdownDescription": "%config.footnotes.enabled%"
+				},
+				"markdownToolkit.emoji.enabled": {
+					"type": "boolean",
+					"default": true,
+					"order": 42,
+					"markdownDescription": "%config.emoji.enabled%"
+				},
+				"markdownToolkit.syntax.mark": {
+					"type": "boolean",
+					"default": false,
+					"order": 50,
+					"markdownDescription": "%config.syntax.mark%"
+				},
+				"markdownToolkit.syntax.superscript": {
+					"type": "boolean",
+					"default": false,
+					"order": 51,
+					"markdownDescription": "%config.syntax.superscript%"
+				},
+				"markdownToolkit.syntax.containers": {
+					"type": "boolean",
+					"default": false,
+					"order": 52,
+					"markdownDescription": "%config.syntax.containers%"
+				}
+			}
+		},
+		"commands": [
+			{
+				"category": "%category%",
+				"command": "markdownToolkit.clearDiagramCache",
+				"title": "%command.clearDiagramCache%"
+			}
+		],
+		"markdown.previewStyles": [
+			"./media/preview/diagram.css",
+			"./media/preview/toc.css",
+			"./media/preview/task-list.css",
+			"./media/preview/syntax.css"
+		],
+		"markdown.previewScripts": [
+			{
+				"path": "./media/preview/toc.js",
+				"type": "module"
+			}
+		]
+	},
+	"activationEvents": [
+		"onUri"
+	],
+	"icon": "media/icon.png",
+	"engines": {
+		"node": ">=22.15.1",
+		"vscode": "^1.101.0"
+	}
+}

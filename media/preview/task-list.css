@@ -1,0 +1,26 @@
+/* 任务列表: 勾选框取代列表圆点, 与 GitHub 的 class 约定一致。 */
+
+/* 关闭任务列表功能时列表上仍有这个 class(在解析阶段加上), 只有真的渲染了勾选框才隐藏圆点。 */
+.contains-task-list:has(.task-list-item-checkbox) {
+	list-style-type: none;
+}
+
+.task-list-item-checkbox {
+	margin: 0 0.35em 0.25em -1.4em;
+	vertical-align: middle;
+}
+
+/* 由外层链接承接点击, 勾选框自己不切换状态, 以源码改写后的重新渲染为准。
+   负外边距放在链接上而不是勾选框上, 否则链接的点击区域会缩成 0 宽, 点击穿透到列表项。 */
+.mtk-task-toggle {
+	display: inline-block;
+	margin: 0 0.35em 0.25em -1.4em;
+	vertical-align: middle;
+	text-decoration: none;
+	cursor: pointer;
+}
+
+.mtk-task-toggle .task-list-item-checkbox {
+	margin: 0;
+	pointer-events: none;
+}

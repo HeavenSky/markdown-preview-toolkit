@@ -16,11 +16,9 @@ See diagrams, tables of contents and GitHub-style Markdown rendered right in VS 
 2. Open a Markdown file and run **Markdown: Open Preview to the Side**.
 3. The preview renders the blocks described below; everything else looks exactly as before.
 
-## Render Mermaid with beautiful-mermaid
+## Keep Mermaid diagrams working on any VS Code version
 
-`mermaid` code blocks render as crisp inline SVG with [beautiful-mermaid](https://github.com/lukilabs/beautiful-mermaid): flowcharts, state, sequence, class and ER diagrams, and XY charts. By default diagrams take their colors from your current color theme, so they blend into the preview in light and dark mode alike; you can also pick any of beautiful-mermaid's 15 themes for each mode.
-
-Diagram types beautiful-mermaid does not support, such as `pie`, `gantt` and `mindmap`, fall back to VS Code's built-in Mermaid renderer, so every diagram still shows up. On VS Code versions without the built-in renderer (before 1.121), or when it is disabled, they are rendered through Kroki instead. Turn off `markdownToolkit.mermaid.enabled` to hand all Mermaid blocks back to the built-in renderer.
+`mermaid` code blocks are left to VS Code's built-in Mermaid renderer (VS Code 1.121 and later), which supports every diagram type, follows your color theme and lets you pan and zoom. On older versions, or when the built-in renderer is disabled, the toolkit renders them through Kroki instead, so the diagrams still show up.
 
 ## Render PlantUML, Graphviz, D2 and more with Kroki
 
@@ -42,7 +40,7 @@ BPMN, Excalidraw and diagrams.net need Kroki's companion containers (`yuzutech/k
 
 ## Copy, save or open any diagram as SVG
 
-Hover a diagram and click the source icon in its top-right corner to copy the SVG source, save it as a `.svg` file, or open it on its own in VS Code's image viewer. You always get the original SVG from beautiful-mermaid or Kroki, not the restyled copy shown in the preview. The first time, VS Code asks whether to let the extension open a `vscode://` link; tick **Do not ask me again for this extension** to skip the prompt.
+Hover a diagram and click the source icon in its top-right corner to copy the SVG source, save it as a `.svg` file, or open it on its own in VS Code's image viewer. The menu appears on Kroki diagrams, including Mermaid diagrams that fall back to Kroki, and always gives you the original SVG Kroki returned, not the restyled copy shown in the preview. The first time, VS Code asks whether to let the extension open a `vscode://` link; tick **Do not ask me again for this extension** to skip the prompt.
 
 ![The source menu on a PlantUML diagram with Copy SVG, Save SVG and Open SVG](media/screenshots/source-menu.png)
 
@@ -64,7 +62,7 @@ On the first click, VS Code asks whether to let the extension open a `vscode://`
 
 Alerts, footnotes and emoji shortcodes now render as they do on GitHub; the built-in preview shows them as plain text:
 
-- Alerts: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]` and `> [!CAUTION]` become colored callouts with an icon.
+- Alerts: `> [!NOTE]`, `> [!TIP]`, `> [!IMPORTANT]`, `> [!WARNING]` and `> [!CAUTION]` become colored callouts with an icon. Obsidian-style callouts work too: add a title after the marker (`> [!tip] Read this first`), make the callout foldable with `-` (collapsed) or `+` (expanded), as in `> [!faq]- Why?`, or use other types such as `info`, `bug` and `example`.
 - Footnotes: `[^1]` becomes a linked superscript, with the notes collected at the end.
 - Emoji shortcodes: `:rocket:` becomes 🚀. Emoticons such as `:)` stay as typed.
 
@@ -72,13 +70,15 @@ Each has its own setting (`markdownToolkit.alerts.enabled`, `markdownToolkit.foo
 
 ## Turn on extra syntax when you need it
 
-Three non-GitHub syntax extensions are off by default so your files stay portable. Turn them on in settings when your documents use them:
+Five non-GitHub syntax extensions are off by default so your files stay portable. Turn them on in settings when your documents use them:
 
 - `markdownToolkit.syntax.mark`: `==highlighted text==`
 - `markdownToolkit.syntax.superscript`: `E = mc^2^`
+- `markdownToolkit.syntax.subscript`: `H~2~O`
 - `markdownToolkit.syntax.containers`: VitePress-style `::: tip`, `::: info`, `::: warning`, `::: danger` and `::: details`, each with an optional title such as `::: warning Read this first`
+- `markdownToolkit.syntax.definitionLists`: a term on one line, followed by one or more `: definition` lines
 
-![Highlighted text, superscript and tip, warning and details containers in the preview](media/screenshots/optional.png)
+![Highlighted text, superscript, subscript, a definition list and tip, warning and details containers in the preview](media/screenshots/optional.png)
 
 ## When not to use it
 
@@ -86,7 +86,7 @@ The toolkit extends the built-in preview only. If you need a standalone preview 
 
 ## Learn more
 
-Commands and settings are listed on the marketplace page's **Feature Contributions** tab. See the [changelog](./CHANGELOG.md) for what changed in each release.
+Commands and settings are listed on the marketplace page's **Feature Contributions** tab. Front matter and math are handled by VS Code itself; see the `markdown.preview.frontMatter` and `markdown.math.enabled` settings. See the [changelog](./CHANGELOG.md) for what changed in each release.
 
 ## License
 

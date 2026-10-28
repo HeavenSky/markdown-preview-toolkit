@@ -9,7 +9,9 @@ const ALL: SyntaxFlags = {
 	emoji: true,
 	mark: false,
 	superscript: false,
+	subscript: false,
 	containers: false,
+	definitionLists: false,
 };
 const LABELS = {
 	note: "Note",
@@ -48,7 +50,7 @@ describe("GitHub 提示块", () => {
 		expect(html).not.toContain("<p></p>");
 	});
 
-	it.each(["> [!NOTE] same line\n", "> Text first\n> [!NOTE]\n", "> [!UNKNOWN]\n> body\n"])(
+	it.each(["> Text first\n> [!NOTE]\n", "> [!]\n> body\n", "> [!1abc]\n> body\n"])(
 		"不识别: %j",
 		source => {
 			const html = render(source);
@@ -62,6 +64,41 @@ describe("GitHub 提示块", () => {
 		const html = render("- item\n\n  > [!WARNING]\n  > careful\n");
 		expect(html).toContain("markdown-alert-warning");
 		expect(html).toContain("careful");
+	});
+
+	it("标记行可跟自定义标题, 标题按纯文本转义", () => {
+		const html = render("> [!NOTE] Read <b>this</b>\n> body\n");
+		expect(html).toContain("markdown-alert-note");
+		expect(html).toContain("</svg>Read &lt;b&gt;this&lt;/b&gt;</p>");
+		expect(html).toContain("body");
+	});
+
+	it("Obsidian 类型按别名取样式, 未知类型按 note 显示并以类型名为标题", () => {
+		const bug = render("> [!bug]\n> x\n");
+		expect(bug).toContain(
+			'class="markdown-alert markdown-alert-caution code-line" data-callout="bug"'
+		);
+		expect(bug).toContain("</svg>Bug</p>");
+		const custom = render("> [!my-thing]\n> x\n");
+		expect(custom).toContain("markdown-alert-note");
+		expect(custom).toContain('data-callout="my-thing"');
+		expect(custom).toContain("</svg>My-thing</p>");
+		expect(render("> [!WARNING]\n> x\n")).not.toContain("data-callout");
+	});
+
+	it("`-` 输出默认折叠的 details, `+` 默认展开", () => {
+		const folded = render("> [!faq]- Why?\n> Because.\n");
+		expect(folded).toMatch(
+			/<details class="markdown-alert markdown-alert-important code-line"[^>]*>/
+		);
+		expect(folded).not.toMatch(/<details[^>]*\sopen/);
+		expect(folded).toContain('<summary class="markdown-alert-title"><svg');
+		expect(folded).toContain("</svg>Why?</summary>");
+		expect(folded).toContain("Because.");
+		expect(folded).toContain("</details>");
+		const expanded = render("> [!TIP]+\n> x\n");
+		expect(expanded).toMatch(/<details[^>]*\sopen=""/);
+		expect(expanded).toContain("</svg>Tip</summary>");
 	});
 
 	it("标题文本转义", () => {
@@ -111,20 +148,31 @@ describe("开关", () => {
 });
 
 describe("可选语法", () => {
-	const ON = { mark: true, superscript: true, containers: true };
+	const ON = {
+		mark: true,
+		superscript: true,
+		subscript: true,
+		containers: true,
+		definitionLists: true,
+	};
+	const DEFLIST = "Term\n: Definition\n";
 
-	it("关闭时高亮, 上标与容器保持原文", () => {
-		const html = render("==hi== x^2^\n\n::: tip\nbody\n:::\n");
+	it("关闭时高亮, 上下标, 定义列表与容器保持原文", () => {
+		const html = render(`==hi== x^2^ H~2~O\n\n${DEFLIST}\n::: tip\nbody\n:::\n`);
 		expect(html).toContain("==hi==");
 		expect(html).toContain("x^2^");
+		expect(html).toContain("H~2~O");
 		expect(html).toContain("::: tip");
 		expect(html).not.toContain("<mark>");
+		expect(html).not.toContain("<dl");
 	});
 
-	it("开启后输出 mark, sup 与容器结构", () => {
-		const html = render("==hi== x^2^\n\n::: tip\nbody\n:::\n", ON);
+	it("开启后输出 mark, sup, sub 与容器结构", () => {
+		const html = render("==hi== x^2^ H~2~O ~~del~~\n\n::: tip\nbody\n:::\n", ON);
 		expect(html).toContain("<mark>hi</mark>");
 		expect(html).toContain("x<sup>2</sup>");
+		expect(html).toContain("H<sub>2</sub>O");
+		expect(html).toContain("<s>del</s>");
 		expect(html).toContain(
 			'<div data-line="2" class="code-line mtk-container mtk-container-tip"><p class="mtk-container-title">Tip</p>'
 		);
@@ -148,6 +196,13 @@ describe("可选语法", () => {
 			'<details data-line="0" class="code-line mtk-container mtk-container-details"><summary>Show me</summary>'
 		);
 		expect(details).toContain("</details>");
+	});
+
+	it("定义列表输出 dl 结构", () => {
+		const html = render(DEFLIST, ON);
+		expect(html).toContain('<dl data-line="0" class="code-line">');
+		expect(html).toMatch(/<dt[^>]*>Term<\/dt>/);
+		expect(html).toMatch(/<dd[^>]*>Definition<\/dd>/);
 	});
 
 	it("::: mermaid 不被容器接管", () => {

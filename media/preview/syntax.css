@@ -27,6 +27,34 @@
 	flex: none;
 }
 
+/* 可折叠的 callout(`> [!faq]-`): 标题是 summary, 用右侧的箭头代替默认的三角标记。 */
+summary.markdown-alert-title {
+	cursor: pointer;
+	list-style: none;
+}
+
+summary.markdown-alert-title::-webkit-details-marker {
+	display: none;
+}
+
+summary.markdown-alert-title::after {
+	content: "";
+	width: 5px;
+	height: 5px;
+	border: solid currentColor;
+	border-width: 0 1.5px 1.5px 0;
+	transform: rotate(-45deg);
+	transition: transform 0.15s;
+}
+
+details.markdown-alert[open] > summary.markdown-alert-title::after {
+	transform: rotate(45deg);
+}
+
+details.markdown-alert:not([open]) > summary.markdown-alert-title {
+	margin-bottom: 0;
+}
+
 .markdown-alert-tip {
 	--mtk-alert-color: #1a7f37;
 }
@@ -77,13 +105,17 @@
 	margin-top: 32px;
 }
 
-/* 可选语法: ==高亮== 与 VitePress 风格容器。 */
+/* 可选语法: ==高亮==, 定义列表与 VitePress 风格容器。 */
 
 mark {
 	padding: 0 2px;
 	border-radius: 2px;
 	background: var(--vscode-editor-findMatchHighlightBackground, rgba(234, 92, 0, 0.33));
 	color: inherit;
+}
+
+dl > dt {
+	font-weight: 600;
 }
 
 .mtk-container {

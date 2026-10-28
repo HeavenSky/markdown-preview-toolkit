@@ -1,16 +1,7 @@
 import * as vscode from "vscode";
 import type { FenceRenderer } from "../../markdown/fence";
-import type { DiagramTools } from "../../markdown/tools";
 import { refreshPreview } from "../../shared/preview";
-import {
-	DEFAULT_DARK_THEME,
-	DEFAULT_LIGHT_THEME,
-	type MermaidRenderer,
-	createMermaidRenderer,
-	resolveTheme,
-} from "./render";
-
-const SECTION = "markdownToolkit.mermaid";
+import { createMermaidRenderer } from "./render";
 
 /** VS Code 1.121 起内置的 mermaid 扩展, 以及更早版本上它的前身(市场扩展)。 */
 const BUILTIN_MERMAID_IDS = ["vscode.mermaid-markdown-features", "bierner.markdown-mermaid"];
@@ -27,15 +18,10 @@ function detectBuiltinMermaid(): boolean {
 	);
 }
 
-function isDarkTheme(kind: vscode.ColorThemeKind): boolean {
-	return kind === vscode.ColorThemeKind.Dark || kind === vscode.ColorThemeKind.HighContrast;
-}
-
 export function registerMermaid(
 	context: vscode.ExtensionContext,
-	fallback: FenceRenderer,
-	tools: DiagramTools
-): MermaidRenderer {
+	fallback: FenceRenderer
+): FenceRenderer {
 	let builtinAvailable = detectBuiltinMermaid();
 	const redetect = () => {
 		const next = detectBuiltinMermaid();
@@ -44,31 +30,11 @@ export function registerMermaid(
 		refreshPreview();
 	};
 
-	const renderer = createMermaidRenderer(
-		() => {
-			const config = vscode.workspace.getConfiguration(SECTION);
-			const dark = isDarkTheme(vscode.window.activeColorTheme.kind);
-			const theme = dark
-				? resolveTheme(config.get<string>("darkTheme"), DEFAULT_DARK_THEME)
-				: resolveTheme(config.get<string>("lightTheme"), DEFAULT_LIGHT_THEME);
-			return {
-				enabled: config.get<boolean>("enabled") === true,
-				theme,
-				dark,
-				builtinAvailable,
-			};
-		},
-		fallback,
-		tools
-	);
-
 	context.subscriptions.push(
-		vscode.window.onDidChangeActiveColorTheme(refreshPreview),
 		vscode.extensions.onDidChange(redetect),
 		vscode.workspace.onDidChangeConfiguration(event => {
-			if (event.affectsConfiguration(SECTION)) refreshPreview();
 			if (event.affectsConfiguration(BUILTIN_SECTION)) redetect();
 		})
 	);
-	return renderer;
+	return createMermaidRenderer(() => ({ builtinAvailable }), fallback);
 }

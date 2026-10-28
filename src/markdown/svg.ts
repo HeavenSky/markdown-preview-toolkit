@@ -1,7 +1,7 @@
 import { escapeHtml } from "./html";
 
 /**
- * 把外部生成的 SVG 改造成可以安全内联进预览的形态, mermaid 与 Kroki 共用。
+ * 把外部生成的 SVG 改造成可以安全内联进预览的形态。
  *
  * 多张图内联在同一页面时, 无作用域的 `<style>` 规则会外泄到整个预览, 固定的 marker id 会互相冲突;
  * 这里把样式与 id 全部限定到以 `prefix` 为 id 的根元素之下, 并让根元素按 viewBox 等比缩放。

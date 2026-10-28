@@ -39,7 +39,7 @@ interface RenderContext {
 }
 
 /**
- * Kroki 图以内联 SVG 输出, 与 mermaid 一样限定了样式与 id 的作用域并用 CSS 覆盖字体;
+ * Kroki 图以内联 SVG 输出, 限定了样式与 id 的作用域并用 CSS 覆盖字体;
  * 缓存里的 SVG 以 `krokiPrefix` 为前缀, 同一次渲染里重复出现的图再追加序号。
  * 提供 `tools` 时在右上角加 `</>` 菜单, 用于复制, 另存或单独查看原始 SVG。
  */

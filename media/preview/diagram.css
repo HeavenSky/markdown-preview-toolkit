@@ -1,6 +1,5 @@
-/* 本扩展渲染的图表块: mermaid 内联 SVG, Kroki 图片, 占位与错误块。 */
+/* 本扩展渲染的图表块: Kroki 内联 SVG, 占位与错误块。 */
 
-.mtk-mermaid,
 .mtk-kroki {
 	margin: 16px 0;
 	text-align: center;
@@ -43,7 +42,6 @@
 
 /* 图表右上角的源码菜单(file-code 图标): 悬停或展开时显示, 菜单项是交给扩展处理的 vscode:// 链接。 */
 /* 容器按内容宽度居中, 菜单才贴在图的右上角而不是整行最右边 */
-.mtk-mermaid,
 .mtk-kroki {
 	position: relative;
 	width: fit-content;
@@ -62,7 +60,6 @@
 	transition: opacity 0.15s;
 }
 
-.mtk-mermaid:hover .mtk-diagram-tools,
 .mtk-kroki:hover .mtk-diagram-tools,
 .mtk-diagram-tools[open],
 .mtk-diagram-tools:focus-within {

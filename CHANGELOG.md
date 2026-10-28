@@ -2,6 +2,13 @@
 
 **English** · [简体中文](./zh/CHANGELOG.md)
 
+## v0.0.2 2026-10-28
+
+- Breaking: `mermaid` code blocks are no longer rendered by beautiful-mermaid; they go to VS Code's built-in Mermaid renderer, or to Kroki when it is unavailable. The `markdownToolkit.mermaid.enabled`, `markdownToolkit.mermaid.lightTheme` and `markdownToolkit.mermaid.darkTheme` settings are removed; to pick a Mermaid theme, use the built-in `markdown-mermaid.lightModeTheme` and `markdown-mermaid.darkModeTheme` settings instead.
+- The extension package shrinks from 533 KB to 68 KB.
+- Alerts now accept Obsidian-style callouts: a custom title after the marker, folding with `-` or `+`, and other types such as `info`, `bug` and `example`.
+- Add opt-in settings for `H~2~O` subscript (`markdownToolkit.syntax.subscript`) and definition lists (`markdownToolkit.syntax.definitionLists`).
+
 ## v0.0.1 2026-10-28
 
 - Render `mermaid` code blocks with beautiful-mermaid, colored from your current color theme by default; unsupported diagram types fall back to the built-in Mermaid renderer, or to Kroki where the built-in renderer is unavailable.

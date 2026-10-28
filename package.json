@@ -1,13 +1,14 @@
 {
 	"name": "markdown-preview-toolkit",
 	"displayName": "Markdown Preview Toolkit",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "%extension.description%",
 	"categories": [
 		"Other",
 		"Visualization"
 	],
 	"keywords": [
+		"callout",
 		"d2",
 		"diagram",
 		"emoji",
@@ -76,13 +77,14 @@
 		"@types/markdown-it-footnote": "^3.0.4",
 		"@types/node": "^26.6.5",
 		"@vscode/vsce": "^4.0.0",
-		"beautiful-mermaid": "^1.1.3",
 		"esbuild": "^0.28.2",
 		"markdown-it": "^15.0.3",
 		"markdown-it-container": "^4.0.0",
+		"markdown-it-deflist": "^4.0.0",
 		"markdown-it-emoji": "^3.1.0",
 		"markdown-it-footnote": "^4.0.0",
 		"markdown-it-mark": "^4.0.0",
+		"markdown-it-sub": "^2.0.0",
 		"markdown-it-sup": "^2.0.0",
 		"oxfmt": "^0.75.0",
 		"oxlint": "^1.90.0",
@@ -98,60 +100,6 @@
 		"configuration": {
 			"title": "Markdown Preview Toolkit",
 			"properties": {
-				"markdownToolkit.mermaid.enabled": {
-					"type": "boolean",
-					"default": true,
-					"order": 0,
-					"description": "%config.mermaid.enabled%"
-				},
-				"markdownToolkit.mermaid.lightTheme": {
-					"type": "string",
-					"enum": [
-						"vscode",
-						"zinc-light",
-						"zinc-dark",
-						"tokyo-night",
-						"tokyo-night-storm",
-						"tokyo-night-light",
-						"catppuccin-mocha",
-						"catppuccin-latte",
-						"nord",
-						"nord-light",
-						"dracula",
-						"github-light",
-						"github-dark",
-						"solarized-light",
-						"solarized-dark",
-						"one-dark"
-					],
-					"default": "vscode",
-					"order": 1,
-					"description": "%config.mermaid.lightTheme%"
-				},
-				"markdownToolkit.mermaid.darkTheme": {
-					"type": "string",
-					"enum": [
-						"vscode",
-						"zinc-light",
-						"zinc-dark",
-						"tokyo-night",
-						"tokyo-night-storm",
-						"tokyo-night-light",
-						"catppuccin-mocha",
-						"catppuccin-latte",
-						"nord",
-						"nord-light",
-						"dracula",
-						"github-light",
-						"github-dark",
-						"solarized-light",
-						"solarized-dark",
-						"one-dark"
-					],
-					"default": "vscode",
-					"order": 2,
-					"description": "%config.mermaid.darkTheme%"
-				},
 				"markdownToolkit.kroki.enabled": {
 					"type": "boolean",
 					"default": true,
@@ -244,11 +192,23 @@
 					"order": 51,
 					"markdownDescription": "%config.syntax.superscript%"
 				},
-				"markdownToolkit.syntax.containers": {
+				"markdownToolkit.syntax.subscript": {
 					"type": "boolean",
 					"default": false,
 					"order": 52,
+					"markdownDescription": "%config.syntax.subscript%"
+				},
+				"markdownToolkit.syntax.containers": {
+					"type": "boolean",
+					"default": false,
+					"order": 53,
 					"markdownDescription": "%config.syntax.containers%"
+				},
+				"markdownToolkit.syntax.definitionLists": {
+					"type": "boolean",
+					"default": false,
+					"order": 54,
+					"markdownDescription": "%config.syntax.definitionLists%"
 				}
 			}
 		},

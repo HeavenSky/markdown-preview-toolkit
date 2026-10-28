@@ -21,8 +21,56 @@ const ICON_PATHS: Readonly<Record<AlertType, string>> = {
 		"M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z",
 };
 
-/** 引用块首个段落的第一行必须只有标记, 例如 `[!NOTE]`(类型不分大小写)。 */
-const MARKER = /^\[!(note|tip|important|warning|caution)\]\s*$/i;
+/**
+ * Obsidian 风格的 callout 类型到 GitHub 五种样式的映射, 取图标与配色; 表外的类型按 `note` 显示。
+ */
+const CALLOUT_STYLES: Readonly<Record<string, AlertType>> = {
+	abstract: "note",
+	summary: "note",
+	tldr: "note",
+	info: "note",
+	todo: "note",
+	quote: "note",
+	cite: "note",
+	hint: "tip",
+	success: "tip",
+	check: "tip",
+	done: "tip",
+	question: "important",
+	help: "important",
+	faq: "important",
+	example: "important",
+	attention: "warning",
+	failure: "caution",
+	fail: "caution",
+	missing: "caution",
+	danger: "caution",
+	error: "caution",
+	bug: "caution",
+};
+
+/**
+ * 引用块首个段落的第一行是标记: `[!类型]`, 可跟 `-`(默认折叠)或 `+`(默认展开)与自定义标题,
+ * 例: `[!NOTE]`, `[!faq]- 常见问题`。类型不分大小写; 只有 GitHub 的五种类型且不带折叠与标题时与 GitHub 一致。
+ */
+const MARKER = /^\[!([a-z][\w-]*)\]([+-]?)(?:\s+(.*))?$/i;
+
+// 用 type 而不是 interface: Token.meta 要求可赋给 Record<string, unknown>
+type AlertMeta = {
+	/** 决定图标与配色的样式。 */
+	readonly style: AlertType;
+	/** 写在标记里的类型, 小写。 */
+	readonly kind: string;
+	/** 自定义标题; 为空时用类型的默认标题。 */
+	readonly title: string;
+	readonly foldable: boolean;
+};
+
+function styleOf(kind: string): AlertType {
+	return ALERT_TYPES.includes(kind as AlertType)
+		? (kind as AlertType)
+		: (CALLOUT_STYLES[kind] ?? "note");
+}
 
 function closingIndex(tokens: readonly Token[], openIndex: number): number {
 	const open = tokens[openIndex];
@@ -63,29 +111,45 @@ export function alertRule(state: StateCore): void {
 		const close = closingIndex(tokens, index);
 		if (!match || close < 0) continue;
 
-		const type = (match[1] ?? "note").toLowerCase() as AlertType;
+		const kind = (match[1] ?? "note").toLowerCase();
+		const meta: AlertMeta = {
+			style: styleOf(kind),
+			kind,
+			title: (match[3] ?? "").trim(),
+			foldable: match[2] !== "",
+		};
 		if (dropFirstLine(inline)) {
 			paragraph.hidden = true;
 			const paragraphClose = tokens[index + 3];
 			if (paragraphClose?.type === "paragraph_close") paragraphClose.hidden = true;
 		}
-		open.tag = "div";
-		open.attrJoin("class", `markdown-alert markdown-alert-${type}`);
+		const tag = meta.foldable ? "details" : "div";
+		open.tag = tag;
+		open.attrJoin("class", `markdown-alert markdown-alert-${meta.style}`);
+		if (kind !== meta.style) open.attrSet("data-callout", kind);
+		if (match[2] === "+") open.attrSet("open", "");
 		const closeToken = tokens[close];
-		if (closeToken) closeToken.tag = "div";
+		if (closeToken) closeToken.tag = tag;
 
-		const title = new state.Token(ALERT_TITLE_TOKEN, "p", 0);
-		title.meta = { type };
+		const title = new state.Token(ALERT_TITLE_TOKEN, meta.foldable ? "summary" : "p", 0);
+		title.meta = meta;
 		title.block = true;
 		tokens.splice(index + 1, 0, title);
 	}
 }
 
-export function renderAlertTitle(type: AlertType, label: string): string {
+export function renderAlertTitle(type: AlertType, label: string, tag = "p"): string {
 	return (
-		`<p class="markdown-alert-title"><svg class="octicon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">` +
-		`<path d="${ICON_PATHS[type]}"></path></svg>${escapeHtml(label)}</p>\n`
+		`<${tag} class="markdown-alert-title"><svg class="octicon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true">` +
+		`<path d="${ICON_PATHS[type]}"></path></svg>${escapeHtml(label)}</${tag}>\n`
 	);
+}
+
+/** GitHub 的五种类型用本地化标题, 其余类型与 Obsidian 一样显示首字母大写的类型名。 */
+function defaultLabel(kind: string, labels: Readonly<Record<AlertType, string>>): string {
+	return ALERT_TYPES.includes(kind as AlertType)
+		? labels[kind as AlertType]
+		: kind.charAt(0).toUpperCase() + kind.slice(1);
 }
 
 export function installAlerts(
@@ -94,8 +158,10 @@ export function installAlerts(
 ): void {
 	md.core.ruler.after("inline", "markdown_toolkit_alerts", alertRule);
 	md.renderer.rules[ALERT_TITLE_TOKEN] = (tokens, idx) => {
-		const type = (tokens[idx]?.meta as { type?: unknown } | null)?.type;
-		if (!ALERT_TYPES.includes(type as AlertType)) return "";
-		return renderAlertTitle(type as AlertType, labels()[type as AlertType]);
+		const token = tokens[idx];
+		const meta = token?.meta as AlertMeta | null | undefined;
+		if (!token || !meta || !ALERT_TYPES.includes(meta.style)) return "";
+		const label = meta.title || defaultLabel(meta.kind, labels());
+		return renderAlertTitle(meta.style, label, token.tag);
 	};
 }

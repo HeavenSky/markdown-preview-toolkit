@@ -18,11 +18,9 @@
 2. 打开一个 Markdown 文件，执行 **Markdown: Open Preview to the Side**。
 3. 预览会渲染下文介绍的各类内容，其余部分与原来完全一样。
 
-## 用 beautiful-mermaid 渲染 Mermaid
+## 在任何 VS Code 版本上显示 Mermaid 图表
 
-`mermaid` 代码块由 [beautiful-mermaid](https://github.com/lukilabs/beautiful-mermaid) 渲染成清晰的内联 SVG，支持流程图、状态图、时序图、类图、ER 图和 XY 图表。图表默认直接取当前配色主题的颜色，浅色和深色模式下都与预览背景融为一体；也可以为两种模式分别从 beautiful-mermaid 的 15 套主题中挑选。
-
-beautiful-mermaid 不支持的图类型（如 `pie`、`gantt`、`mindmap`）交给 VS Code 内置的 Mermaid 渲染器，所以每张图都能显示。没有内置渲染器的 VS Code 版本（1.121 之前），或内置渲染器被禁用时，改由 Kroki 渲染。关闭 `markdownToolkit.mermaid.enabled` 后，全部 Mermaid 代码块都交回内置渲染。
+`mermaid` 代码块交给 VS Code 内置的 Mermaid 渲染器（VS Code 1.121 及以上），它支持全部图类型、跟随配色主题，还能平移缩放。在更早的版本上，或内置渲染器被禁用时，插件改用 Kroki 渲染，图表照样能显示。
 
 ## 用 Kroki 渲染 PlantUML、Graphviz、D2 等图表
 
@@ -44,7 +42,7 @@ BPMN、Excalidraw 和 diagrams.net 还需要 Kroki 的配套容器（`yuzutech/k
 
 ## 把图表复制、另存或单独打开为 SVG
 
-鼠标悬停在图表上，点击右上角的源码图标，可以复制 SVG 源码、另存为 `.svg` 文件，或在 VS Code 的图片查看器中单独打开。拿到的始终是 beautiful-mermaid 或 Kroki 输出的原始 SVG，而不是预览里改过样式的副本。第一次使用时，VS Code 会询问是否允许插件打开 `vscode://` 链接，勾选 **Do not ask me again for this extension** 后不再询问。
+鼠标悬停在图表上，点击右上角的源码图标，可以复制 SVG 源码、另存为 `.svg` 文件，或在 VS Code 的图片查看器中单独打开。菜单出现在 Kroki 渲染的图表上（包括改由 Kroki 渲染的 Mermaid 图），拿到的始终是 Kroki 返回的原始 SVG，而不是预览里改过样式的副本。第一次使用时，VS Code 会询问是否允许插件打开 `vscode://` 链接，勾选 **Do not ask me again for this extension** 后不再询问。
 
 ![PlantUML 图表上的源码菜单：复制、另存与单独查看 SVG](../media/screenshots/source-menu.png)
 
@@ -66,7 +64,7 @@ BPMN、Excalidraw 和 diagrams.net 还需要 Kroki 的配套容器（`yuzutech/k
 
 提示块、脚注和 Emoji 短码按 GitHub 的效果渲染，内置预览只会把它们显示成普通文字：
 
-- 提示块：`> [!NOTE]`、`> [!TIP]`、`> [!IMPORTANT]`、`> [!WARNING]` 和 `> [!CAUTION]` 变成带图标的彩色提示框。
+- 提示块：`> [!NOTE]`、`> [!TIP]`、`> [!IMPORTANT]`、`> [!WARNING]` 和 `> [!CAUTION]` 变成带图标的彩色提示框。Obsidian 风格的 callout 同样可用：标记后面写标题（`> [!tip] 先看这里`），加 `-`（默认收起）或 `+`（默认展开）变成可折叠的提示框，例如 `> [!faq]- 为什么？`，也可以用 `info`、`bug`、`example` 等其他类型。
 - 脚注：`[^1]` 变成带链接的上标，脚注内容汇总在文末。
 - Emoji 短码：`:rocket:` 变成 🚀。`:)` 这类表情符号保持原样。
 
@@ -74,13 +72,15 @@ BPMN、Excalidraw 和 diagrams.net 还需要 Kroki 的配套容器（`yuzutech/k
 
 ## 按需开启更多语法
 
-三种不属于 GitHub 的扩展语法默认关闭，以免文件换个地方就渲染不出来。文档用到它们时再在设置中开启：
+五种不属于 GitHub 的扩展语法默认关闭，以免文件换个地方就渲染不出来。文档用到它们时再在设置中开启：
 
 - `markdownToolkit.syntax.mark`：`==高亮文字==`
 - `markdownToolkit.syntax.superscript`：`E = mc^2^`
+- `markdownToolkit.syntax.subscript`：`H~2~O`
 - `markdownToolkit.syntax.containers`：VitePress 风格的 `::: tip`、`::: info`、`::: warning`、`::: danger` 和 `::: details`，名字后可以跟自定义标题，例如 `::: warning 先看这里`
+- `markdownToolkit.syntax.definitionLists`：定义列表，术语独占一行，下面跟一行或多行 `: 释义`
 
-![预览中的高亮文字、上标，以及 tip、warning、details 容器](../media/screenshots/optional.png)
+![预览中的高亮文字、上标、下标、定义列表，以及 tip、warning、details 容器](../media/screenshots/optional.png)
 
 ## 不适合的场景
 
@@ -88,7 +88,7 @@ BPMN、Excalidraw 和 diagrams.net 还需要 Kroki 的配套容器（`yuzutech/k
 
 ## 了解更多
 
-命令与设置列在插件市场页的 **Feature Contributions** 标签里。每个版本的改动见[更新日志](./CHANGELOG.md)。
+命令与设置列在插件市场页的 **Feature Contributions** 标签里。Front matter 与数学公式由 VS Code 自身处理，相关设置见 `markdown.preview.frontMatter` 和 `markdown.math.enabled`。每个版本的改动见[更新日志](./CHANGELOG.md)。
 
 ## 许可证
 

@@ -1,7 +1,9 @@
 import type { MarkdownIt } from "markdown-it";
 import { full as emoji } from "markdown-it-emoji";
+import deflist from "markdown-it-deflist";
 import footnote from "markdown-it-footnote";
 import mark from "markdown-it-mark";
+import sub from "markdown-it-sub";
 import sup from "markdown-it-sup";
 import { type AlertType, installAlerts } from "./alerts";
 import { type ContainerName, installContainers } from "./containers";
@@ -13,7 +15,9 @@ export interface SyntaxFlags {
 	readonly emoji: boolean;
 	readonly mark: boolean;
 	readonly superscript: boolean;
+	readonly subscript: boolean;
 	readonly containers: boolean;
+	readonly definitionLists: boolean;
 }
 
 export type SyntaxLabels = Readonly<Record<AlertType | ContainerName, string>>;
@@ -29,5 +33,7 @@ export function installSyntax(
 	if (flags.emoji) md.use(emoji, { shortcuts: {} });
 	if (flags.mark) md.use(mark);
 	if (flags.superscript) md.use(sup);
+	if (flags.subscript) md.use(sub);
 	if (flags.containers) installContainers(md, labels);
+	if (flags.definitionLists) md.use(deflist);
 }

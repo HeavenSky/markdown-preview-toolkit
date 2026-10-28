@@ -22,15 +22,14 @@ export function activate(context: vscode.ExtensionContext): {
 	const router = new UriRouter(context);
 	const tools = registerDiagramTools(context, router);
 	const kroki = registerKroki(context, tools);
-	const mermaid = registerMermaid(context, kroki.renderMermaid, tools);
+	const mermaid = registerMermaid(context, kroki.renderMermaid);
 	const toc = registerToc(context);
 	const taskList = registerTaskList(context, router);
 	const syntax = registerSyntax(context);
-	const renderers: FenceRenderer[] = [mermaid.render, kroki.render];
+	const renderers: FenceRenderer[] = [mermaid, kroki.render];
 
 	context.subscriptions.push(
 		vscode.commands.registerCommand("markdownToolkit.clearDiagramCache", () => {
-			mermaid.clear();
 			kroki.clear();
 			refreshPreview();
 		})

@@ -4,7 +4,7 @@
 //   toc        展开悬浮目录栏, 点击目录项跳转
 //   task       在预览里点击未勾选的任务, 检查源码是否被改写
 //   toggle     运行时关闭脚注开关, 检查已打开的预览是否按新插件重新解析
-//   optional   运行时打开三个可选语法开关, 拍可选语法一节
+//   optional   运行时打开全部可选语法开关, 拍可选语法一节
 //   nobuiltin  让内置 mermaid 不再接管 mermaid, 检查不支持的图改由 Kroki 渲染
 //   source     图表的 </> 菜单: 复制原始 SVG 并核对剪贴板, 再用内置图片预览单独打开
 // 环境变量 MTK_KROKI_SERVER 覆盖 Kroki 服务器地址, 用于拍服务不可达时的错误展示。
@@ -130,7 +130,9 @@ try {
 			{
 				"markdownToolkit.syntax.mark": true,
 				"markdownToolkit.syntax.superscript": true,
+				"markdownToolkit.syntax.subscript": true,
 				"markdownToolkit.syntax.containers": true,
+				"markdownToolkit.syntax.definitionLists": true,
 			},
 			4000
 		);

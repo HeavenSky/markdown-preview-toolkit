@@ -12,7 +12,9 @@ const PARSE_TIME_KEYS = [
 	"emoji.enabled",
 	"syntax.mark",
 	"syntax.superscript",
+	"syntax.subscript",
 	"syntax.containers",
+	"syntax.definitionLists",
 ] as const;
 
 const SECTION = "markdownToolkit";
@@ -54,7 +56,9 @@ export function registerSyntax(context: vscode.ExtensionContext): SyntaxFeature 
 					emoji: enabled("emoji.enabled"),
 					mark: enabled("syntax.mark"),
 					superscript: enabled("syntax.superscript"),
+					subscript: enabled("syntax.subscript"),
 					containers: enabled("syntax.containers"),
+					definitionLists: enabled("syntax.definitionLists"),
 				},
 				labels
 			);

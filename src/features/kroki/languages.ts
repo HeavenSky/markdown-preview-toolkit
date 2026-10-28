@@ -1,7 +1,7 @@
 /**
  * 围栏代码块语言名到 Kroki 图类型的映射。
  *
- * 不含 `mermaid`(由 beautiful-mermaid 与内置渲染负责)与 `math`(内置 KaTeX 负责)。
+ * 不含 `mermaid`(由内置渲染负责, 不可用时才按 Kroki 的 mermaid 兜底)与 `math`(内置 KaTeX 负责)。
  */
 export const DEFAULT_KROKI_LANGUAGES: Readonly<Record<string, string>> = {
 	plantuml: "plantuml",

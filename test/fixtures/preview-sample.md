@@ -25,6 +25,9 @@
 > [!CAUTION]
 > Advises about risks or negative outcomes.
 
+> [!faq]- Obsidian-style callout with a custom title
+> Folded until you click the title.
+
 Footnotes work too[^1], and so do emoji :rocket: :tada:.
 
 [^1]: Rendered by markdown-it-footnote.
@@ -45,9 +48,9 @@ sequenceDiagram
 ```
 
 ```mermaid
-pie title Handled by the built-in renderer
-  "beautiful-mermaid" : 6
-  "built-in" : 4
+pie title Pets
+  "Dogs" : 6
+  "Cats" : 4
 ```
 
 ## Kroki
@@ -76,7 +79,10 @@ kroki -> preview: SVG
 
 ## Optional syntax
 
-These render only after you turn the `markdownToolkit.syntax.*` settings on: ==highlighted text== and E = mc^2^.
+These render only after you turn the `markdownToolkit.syntax.*` settings on: ==highlighted text==, E = mc^2^ and H~2~O.
+
+Definition list
+: A term followed by its definition.
 
 ::: tip
 VitePress-style tip container.

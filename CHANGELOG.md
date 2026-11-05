@@ -2,6 +2,14 @@
 
 **English** · [简体中文](./zh/CHANGELOG.md)
 
+## v0.0.3 2026-11-05
+
+- Security: task toggle links are now signed with a per-session token bound to the exact task line. Links that were forged, copied across documents or left over from an outdated preview are rejected, and the toggle settings are re-checked when a link is used, so a stale link can no longer check a different task that happens to sit on the same line.
+- Add the `markdownToolkit.kroki.darkMode` setting to invert diagram colors in dark themes, so diagrams blend with the editor instead of sitting on a white card. Colored elements may shift hue slightly.
+- Fix: previews with more than 200 different Kroki diagrams no longer evict each other from the cache and re-request continuously.
+- Fix: transient Kroki failures (HTTP 429 and 5xx, network errors and timeouts) are retried after 30 seconds instead of being cached until the extension restarts; diagram errors such as HTTP 400 keep their current behavior.
+- Fix: SVG styles that target element ids (for example `#node { fill: red }`) keep matching after the ids are scoped, so the preview copy stays faithful to the original diagram.
+
 ## v0.0.2 2026-10-28
 
 - Breaking: `mermaid` code blocks are no longer rendered by beautiful-mermaid; they go to VS Code's built-in Mermaid renderer, or to Kroki when it is unavailable. The `markdownToolkit.mermaid.enabled`, `markdownToolkit.mermaid.lightTheme` and `markdownToolkit.mermaid.darkTheme` settings are removed; to pick a Mermaid theme, use the built-in `markdown-mermaid.lightModeTheme` and `markdown-mermaid.darkModeTheme` settings instead.

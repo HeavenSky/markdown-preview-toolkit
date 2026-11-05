@@ -2,6 +2,14 @@
 
 [English](../CHANGELOG.md) · **简体中文**
 
+## v0.0.3 2026-11-05
+
+- 安全修复：任务回写链接改为用会话内随机密钥对具体任务行签发操作标识。伪造的链接、跨文档复制的链接和过期预览遗留的链接都会被拒绝，点击回写时还会重新读取开关设置；过期链接再也无法误勾选恰好排在同一行上的另一条任务。
+- 新增 `markdownToolkit.kroki.darkMode` 设置：深色主题下反相显示图表配色，让图表融入编辑器而不是白底卡片。彩色元素会略微偏色。
+- 修复：同一预览里超过 200 张不同的 Kroki 图表时，图表不再在缓存里互相淘汰并导致持续重新请求。
+- 修复：Kroki 的暂时性失败（HTTP 429 与 5xx、网络错误和超时）在 30 秒后允许重试，不再缓存到重启扩展为止；HTTP 400 之类的图源错误保持原有行为。
+- 修复：SVG 里以元素 id 为目标的样式（例如 `#node { fill: red }`）在 id 加作用域后仍然匹配，预览副本与原图保持一致。
+
 ## v0.0.2 2026-10-28
 
 - 破坏性变更：`mermaid` 代码块不再由 beautiful-mermaid 渲染，改为交给 VS Code 内置的 Mermaid 渲染器，内置渲染器不可用时改由 Kroki 渲染。移除 `markdownToolkit.mermaid.enabled`、`markdownToolkit.mermaid.lightTheme` 和 `markdownToolkit.mermaid.darkTheme` 三个设置；需要选择 Mermaid 主题时，改用内置的 `markdown-mermaid.lightModeTheme` 和 `markdown-mermaid.darkModeTheme`。

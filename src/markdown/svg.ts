@@ -32,6 +32,46 @@ export function sanitizeSvg(svg: string): string {
  * `renameId` 与元素 id 的改名共用同一映射: 选择器里的 `#id` 先按映射改写, 改写后已挂在根元素
  * 自身的选择器(引用了根 id)不再套一层作用域, 否则元素改名后 CSS 就匹配不上了。
  */
+function renameSelectorIds(selector: string, renameId: (id: string) => string): string {
+	let result = "";
+	let quote: string | undefined;
+	let inAttribute = false;
+	for (let index = 0; index < selector.length; index++) {
+		const char = selector[index] ?? "";
+		if (quote) {
+			result += char;
+			if (char === "\\") {
+				const escaped = selector[index + 1];
+				if (escaped !== undefined) {
+					result += escaped;
+					index++;
+				}
+				continue;
+			}
+			if (char === quote) quote = undefined;
+			continue;
+		}
+		if (char === '"' || char === "'") {
+			quote = char;
+			result += char;
+			continue;
+		}
+		if (char === "[") inAttribute = true;
+		if (char === "]") inAttribute = false;
+		if (char === "#" && !inAttribute) {
+			const id = /^[\w-]+/.exec(selector.slice(index + 1))?.[0];
+			if (id !== undefined) {
+				const next = renameId(id);
+				result += next === undefined ? `#${id}` : `#${next}`;
+				index += id.length;
+				continue;
+			}
+		}
+		result += char;
+	}
+	return result;
+}
+
 export function scopeCss(
 	css: string,
 	prefix: string,
@@ -43,12 +83,7 @@ export function scopeCss(
 		selector.startsWith(rootedAt) && !/[\w-]/.test(selector[rootedAt.length] ?? "");
 	const scopeOne = (selector: string): string[] => {
 		if (selector === "svg") return [rootedAt];
-		const renamed = renameId
-			? selector.replace(/#([\w-]+)/g, (raw, id: string) => {
-					const next = renameId(id);
-					return next === undefined ? raw : `#${next}`;
-				})
-			: selector;
+		const renamed = renameId ? renameSelectorIds(selector, renameId) : selector;
 		if (isRooted(renamed)) return [renamed];
 		const scoped = [`${rootedAt} ${renamed}`];
 		const leading = renamed.match(/^\.([\w-]+)/)?.[1];

@@ -133,6 +133,16 @@ describe("通用 SVG 处理", () => {
 		expect(svg).toContain("#fff{fill:#fff}");
 	});
 
+	it("样式属性选择器里的颜色值不改写", () => {
+		const svg = scopeSvg(
+			'<svg id="root" viewBox="0 0 1 1"><style>[fill="#fff"]{stroke:red}#fff{fill:blue}</style><rect id="fff" fill="#fff"/></svg>',
+			"p1"
+		);
+		expect(svg).toContain('<rect id="p1-fff" fill="#fff"/>');
+		expect(svg).toContain('[fill="#fff"]{stroke:red}');
+		expect(svg).toContain("#p1-fff{fill:blue}");
+	});
+
 	it("给根元素加上图片语义与名称", () => {
 		expect(labelSvg('<svg id="a">x</svg>', 'a "b"')).toBe(
 			'<svg role="img" aria-label="a &quot;b&quot;" id="a">x</svg>'

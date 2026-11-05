@@ -184,6 +184,47 @@ describe("KrokiCache", () => {
 		expect(request).toHaveBeenCalledTimes(3);
 	});
 
+	it("HTTP 429 与 5xx 视为暂时性错误, 30 秒后允许重试", async () => {
+		const { cache, request, advance } = setup([
+			{ kind: "error", failure: { reason: "http", status: 503, detail: "down" } },
+			{ kind: "svg", svg: SVG },
+		]);
+		cache.lookup("s", "d2", "a");
+		await vi.advanceTimersByTimeAsync(0);
+		expect(cache.lookup("s", "d2", "a")).toEqual({
+			kind: "error",
+			failure: { reason: "http", status: 503, detail: "down" },
+		});
+		advance(30_001);
+		expect(cache.lookup("s", "d2", "a")).toBeUndefined();
+		await vi.advanceTimersByTimeAsync(0);
+		expect(cache.lookup("s", "d2", "a")).toEqual({ kind: "svg", svg: SVG });
+		expect(request).toHaveBeenCalledTimes(2);
+	});
+
+	it("活跃图表数超过缓存容量时不会互相淘汰驱动重新请求", async () => {
+		let now = 0;
+		const request = vi.fn(async (_server: string, _type: string, source: string) => ({
+			kind: "svg" as const,
+			svg: SVG + source,
+		}));
+		const cache = new KrokiCache({ request, onUpdate: () => {}, now: () => now });
+		const sources = Array.from({ length: 201 }, (_, i) => `d${i}`);
+		for (const source of sources) cache.lookup("s", "d2", source);
+		await vi.advanceTimersByTimeAsync(0);
+		expect(request).toHaveBeenCalledTimes(201);
+		// 防抖刷新触发后重新渲染: 历史缓存只留 200 条, 但活跃集合保住了全部图
+		await vi.advanceTimersByTimeAsync(300);
+		for (const source of sources)
+			expect(cache.lookup("s", "d2", source)).toEqual({ kind: "svg", svg: SVG + source });
+		expect(request).toHaveBeenCalledTimes(201);
+		// 长时间不再查看后活跃条目移出, 淘汰的图才重新请求
+		now += 10 * 60_001;
+		const evicted = sources[0] as string;
+		cache.lookup("s", "d2", evicted);
+		expect(request).toHaveBeenCalledTimes(202);
+	});
+
 	it("清空后丢弃在途请求的结果", async () => {
 		const { cache, onUpdate } = setup([]);
 		cache.lookup("s", "d2", "a");

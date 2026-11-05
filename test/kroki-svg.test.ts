@@ -120,6 +120,19 @@ describe("通用 SVG 处理", () => {
 		);
 	});
 
+	it("样式里的 id 选择器按同一映射改写, 改名后仍能匹配", () => {
+		const svg = scopeSvg(
+			'<svg id="root" viewBox="0 0 1 1"><style>#root rect{fill:red}#node{fill:blue}.a #x{stroke:green}#fff{fill:#fff}</style><rect id="node"/><g id="x" class="a"/></svg>',
+			"p1"
+		);
+		expect(svg).toContain('<rect id="p1-node"/>');
+		expect(svg).toContain('<g id="p1-x" class="a"/>');
+		expect(svg).toContain("#p1 rect{fill:red}");
+		expect(svg).toContain("#p1 #p1-node{fill:blue}");
+		expect(svg).toContain("#p1 .a #p1-x{stroke:green}");
+		expect(svg).toContain("#fff{fill:#fff}");
+	});
+
 	it("给根元素加上图片语义与名称", () => {
 		expect(labelSvg('<svg id="a">x</svg>', 'a "b"')).toBe(
 			'<svg role="img" aria-label="a &quot;b&quot;" id="a">x</svg>'

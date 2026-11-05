@@ -28,13 +28,31 @@ export function sanitizeSvg(svg: string): string {
 /**
  * 把每个选择器限定到根元素之下。选择器以根元素自身带的 class 开头时(例: svgbob 的 `.svgbob line`,
  * 而 `svgbob` 就在根 `<svg>` 上), 另外生成一份挂在根元素自身的写法, 否则一条都匹配不上。
+ *
+ * `renameId` 与元素 id 的改名共用同一映射: 选择器里的 `#id` 先按映射改写, 改写后已挂在根元素
+ * 自身的选择器(引用了根 id)不再套一层作用域, 否则元素改名后 CSS 就匹配不上了。
  */
-export function scopeCss(css: string, prefix: string, rootClasses: readonly string[] = []): string {
+export function scopeCss(
+	css: string,
+	prefix: string,
+	rootClasses: readonly string[] = [],
+	renameId?: (id: string) => string
+): string {
+	const rootedAt = `#${prefix}`;
+	const isRooted = (selector: string): boolean =>
+		selector.startsWith(rootedAt) && !/[\w-]/.test(selector[rootedAt.length] ?? "");
 	const scopeOne = (selector: string): string[] => {
-		if (selector === "svg") return [`#${prefix}`];
-		const scoped = [`#${prefix} ${selector}`];
-		const leading = selector.match(/^\.([\w-]+)/)?.[1];
-		if (leading && rootClasses.includes(leading)) scoped.unshift(`#${prefix}${selector}`);
+		if (selector === "svg") return [rootedAt];
+		const renamed = renameId
+			? selector.replace(/#([\w-]+)/g, (raw, id: string) => {
+					const next = renameId(id);
+					return next === undefined ? raw : `#${next}`;
+				})
+			: selector;
+		if (isRooted(renamed)) return [renamed];
+		const scoped = [`${rootedAt} ${renamed}`];
+		const leading = renamed.match(/^\.([\w-]+)/)?.[1];
+		if (leading && rootClasses.includes(leading)) scoped.unshift(`${rootedAt}${renamed}`);
 		return scoped;
 	};
 	return css.replace(
@@ -58,11 +76,14 @@ export function scopeSvg(svg: string, prefix: string): string {
 		.filter(Boolean);
 	const ids = new Set([...svg.matchAll(/\sid="([^"]+)"/g)].map(match => match[1] ?? ""));
 	if (rootId !== undefined) ids.delete(rootId);
+	// 根元素 id 改写为前缀本身, 其余登记过的 id 加前缀; 未登记的(例: CSS 里的颜色值)保持原样
+	const renameId = (id: string): string =>
+		id === rootId ? prefix : ids.has(id) ? `${prefix}-${id}` : id;
 
 	let scoped = svg.replace(
 		/<style([^>]*)>([\s\S]*?)<\/style>/g,
 		(_match, attrs: string, css: string) => {
-			return `<style${attrs}>${scopeCss(css, prefix, rootClasses)}</style>`;
+			return `<style${attrs}>${scopeCss(css, prefix, rootClasses, renameId)}</style>`;
 		}
 	);
 	scoped = scoped.replace(

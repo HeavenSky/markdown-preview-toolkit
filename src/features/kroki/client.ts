@@ -20,9 +20,12 @@ export type KrokiResult =
 	  }
 	| { readonly kind: "error"; readonly failure: KrokiFailure };
 
-/** 网络不可达与超时是暂时性的, 过期后应重试; 服务端明确拒绝的图源错误不是。 */
+/** 网络不可达, 超时, 限流与服务端暂时不可用是暂时性的, 过期后应重试; 明确拒绝的图源错误不是。 */
 export function isTransient(failure: KrokiFailure): boolean {
-	return failure.reason === "timeout" || failure.reason === "network";
+	if (failure.reason === "timeout" || failure.reason === "network") return true;
+	if (failure.reason === "http")
+		return failure.status === 429 || (failure.status >= 500 && failure.status <= 599);
+	return false;
 }
 
 /**

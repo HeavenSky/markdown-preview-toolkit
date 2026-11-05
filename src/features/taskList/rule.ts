@@ -13,6 +13,8 @@ export type TaskMeta = {
 	readonly marker: string;
 	/** 列表项在源码中的起始行(从 0 开始)。 */
 	readonly line: number;
+	/** 该行的原始源码, 用来签发绑定任务快照的回写标识。 */
+	readonly text: string;
 };
 
 function isTaskMeta(value: unknown): value is TaskMeta {
@@ -20,7 +22,8 @@ function isTaskMeta(value: unknown): value is TaskMeta {
 	return (
 		typeof meta?.checked === "boolean" &&
 		typeof meta.marker === "string" &&
-		typeof meta.line === "number"
+		typeof meta.line === "number" &&
+		typeof meta.text === "string"
 	);
 }
 
@@ -52,6 +55,9 @@ function markListAsTaskList(tokens: Token[], itemIndex: number): void {
  * 只做结构识别, 不读配置: 核心按文档版本缓存解析结果, 配置变化不会让缓存失效。
  */
 export function taskListRule(state: StateCore): void {
+	// 核心状态没有按行切好的源码, 有任务项时才切一次
+	let lines: string[] | undefined;
+	const lineText = (number_: number): string => (lines ??= state.src.split(/\r?\n/))[number_] ?? "";
 	const tokens = state.tokens;
 	for (let index = 2; index < tokens.length; index++) {
 		const inline = tokens[index];
@@ -72,10 +78,12 @@ export function taskListRule(state: StateCore): void {
 		first.content = first.content.slice(match[0].length).replace(/^\s/, "");
 		inline.content = inline.content.slice(match[0].length).replace(/^\s/, "");
 		const task = new state.Token(TASK_TOKEN, "input", 0);
+		const line = item.map?.[0] ?? -1;
 		const meta: TaskMeta = {
 			checked: match[1] !== " ",
 			marker: match[0],
-			line: item.map?.[0] ?? -1,
+			line,
+			text: line >= 0 ? lineText(line) : "",
 		};
 		task.meta = meta;
 		inline.children?.unshift(task);

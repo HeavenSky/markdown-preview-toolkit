@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { buildToggleQuery, parseToggleQuery, planToggle } from "../src/features/taskList/line";
+import {
+	buildToggleQuery,
+	parseToggleQuery,
+	planToggle,
+	toggleToken,
+} from "../src/features/taskList/line";
 import { type TaskRenderOptions, installTaskList } from "../src/features/taskList/rule";
 import { createPreviewMd } from "./markdown-helpers";
 
@@ -90,11 +95,25 @@ describe("源码回写", () => {
 	});
 
 	it("查询参数往返一致, 非法参数拒绝", () => {
-		const request = { doc: "file:///a b.md", line: 4, checked: true };
+		const request = { doc: "file:///a b.md", line: 4, checked: true, token: "t1" };
 		expect(parseToggleQuery(buildToggleQuery(request))).toEqual(request);
-		expect(parseToggleQuery("doc=x&line=-1&checked=0")).toBeUndefined();
-		expect(parseToggleQuery("doc=x&line=1.5&checked=0")).toBeUndefined();
-		expect(parseToggleQuery("doc=x&line=1&checked=2")).toBeUndefined();
-		expect(parseToggleQuery("line=1&checked=0")).toBeUndefined();
+		expect(parseToggleQuery("doc=x&line=-1&checked=0&token=t")).toBeUndefined();
+		expect(parseToggleQuery("doc=x&line=1.5&checked=0&token=t")).toBeUndefined();
+		expect(parseToggleQuery("doc=x&line=1&checked=2&token=t")).toBeUndefined();
+		expect(parseToggleQuery("line=1&checked=0&token=t")).toBeUndefined();
+		expect(parseToggleQuery("doc=x&line=1&checked=0")).toBeUndefined();
+	});
+
+	it("操作标识只对同一会话内同一任务快照有效", () => {
+		const token = (text: string, checked = false, line = 3) =>
+			toggleToken("secret-1", "file:///a.md", line, checked, text);
+		expect(token("- [ ] A")).toBe(token("- [ ] A"));
+		expect(token("- [ ] A")).not.toBe(token("- [ ] B"));
+		expect(token("- [ ] A")).not.toBe(token("- [x] A", true));
+		expect(token("- [ ] A")).not.toBe(token("- [ ] A", false, 4));
+		expect(token("- [ ] A")).not.toBe(toggleToken("secret-2", "file:///a.md", 3, false, "- [ ] A"));
+		expect(token("- [ ] A")).not.toBe(
+			toggleToken("secret-1", "file:///b.md", 3, false, "- [ ] A")
+		);
 	});
 });

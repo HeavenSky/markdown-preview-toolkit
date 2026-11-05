@@ -6,6 +6,7 @@
 	"config.kroki.server": "Kroki 服务器地址. 默认的公共服务器会收到你预览的每张图的源码; 改成自建服务器(例如 `http://localhost:8000`)即可让图表留在本机.",
 	"config.kroki.timeout": "等待 Kroki 服务器响应的时长, 单位毫秒.",
 	"config.kroki.languages": "把更多代码块语言映射到 Kroki 图类型, 例如 `{ \"uml\": \"plantuml\" }`. 映射为空字符串则不再渲染该语言.",
+	"config.kroki.darkMode": "深色主题下反相显示图表配色, 使其融入编辑器而不是白底卡片. 彩色元素会略微偏色.",
 	"config.toc.minLevel": "目录收录的最小标题级别.",
 	"config.toc.maxLevel": "目录收录的最大标题级别.",
 	"config.toc.sidebar": "在预览右侧显示可折叠的目录栏.",

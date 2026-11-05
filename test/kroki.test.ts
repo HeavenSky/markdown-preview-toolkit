@@ -256,6 +256,7 @@ describe("Kroki 渲染器", () => {
 			server: "https://kroki.io",
 			rawServer: "https://kroki.io",
 			languages: resolveKrokiLanguages(undefined),
+			darkMode: false,
 			...settings,
 		};
 		const { md, finish } = createPreviewMd();
@@ -290,6 +291,18 @@ describe("Kroki 渲染器", () => {
 		md.render(SOURCE);
 		await vi.advanceTimersByTimeAsync(0);
 		expect(md.render(SOURCE)).toContain("Kroki failed &lt;bad&gt;");
+	});
+
+	it("darkMode 开启时容器带反相标记, 默认不带", async () => {
+		const dark = setup({ darkMode: true }, { kind: "svg", svg: SVG });
+		dark.render(SOURCE);
+		await vi.advanceTimersByTimeAsync(0);
+		expect(dark.render(SOURCE)).toMatch(/class="code-line mtk-kroki mtk-kroki-dark"/);
+		const light = setup({}, { kind: "svg", svg: SVG });
+		light.render(SOURCE);
+		await vi.advanceTimersByTimeAsync(0);
+		expect(light.render(SOURCE)).toMatch(/class="code-line mtk-kroki"/);
+		expect(light.render(SOURCE)).not.toContain("mtk-kroki-dark");
 	});
 
 	it("失败时输出转义后的错误块与源码", async () => {
@@ -329,6 +342,7 @@ describe("Kroki 渲染器", () => {
 			server: "https://kroki.io",
 			rawServer: "https://kroki.io",
 			languages: resolveKrokiLanguages(undefined),
+			darkMode: false,
 		};
 		const renderMermaid = createKrokiTypeRenderer("mermaid", () => settings, cache, messages);
 		const { md, finish } = createPreviewMd();
@@ -387,6 +401,7 @@ describe("图表 </> 菜单", () => {
 			server: "https://kroki.io",
 			rawServer: "https://kroki.io",
 			languages: resolveKrokiLanguages(undefined),
+			darkMode: false,
 		};
 		const { md, finish } = createPreviewMd();
 		installFenceRouter(md, [

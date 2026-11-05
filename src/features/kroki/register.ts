@@ -73,6 +73,7 @@ export function registerKroki(context: vscode.ExtensionContext, tools: DiagramTo
 				server: normalizeServer(rawServer),
 				rawServer,
 				languages: resolveKrokiLanguages(config.get("languages")),
+				darkMode: config.get<boolean>("darkMode") === true,
 			};
 		}
 		return settings;

@@ -12,6 +12,8 @@ export interface KrokiSettings {
 	readonly server: string | undefined;
 	readonly rawServer: string;
 	readonly languages: ReadonlyMap<string, string>;
+	/** 深色主题下反相显示图表; 容器只是挂上标记, 反相由 CSS 按当前主题类生效。 */
+	readonly darkMode: boolean;
 }
 
 /** 面向用户的文案, 由宿主侧按界面语言提供。 */
@@ -100,5 +102,6 @@ function renderKroki(
 		messages.alt(type)
 	);
 	const menu = tools?.({ id: base, type, svg: result.source ?? result.svg }) ?? "";
-	return `<div${containerAttrs(block.token, "mtk-kroki")} data-mtk-type="${escapeHtml(type)}">${menu}${svg}</div>\n`;
+	const kind = current.darkMode ? "mtk-kroki mtk-kroki-dark" : "mtk-kroki";
+	return `<div${containerAttrs(block.token, kind)} data-mtk-type="${escapeHtml(type)}">${menu}${svg}</div>\n`;
 }

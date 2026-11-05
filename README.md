@@ -22,7 +22,7 @@ See diagrams, tables of contents and GitHub-style Markdown rendered right in VS 
 
 ## Render PlantUML, Graphviz, D2 and more with Kroki
 
-Code blocks in any of [Kroki's diagram languages](https://kroki.io/#support) render as inline SVG on a white card: `plantuml`, `graphviz` or `dot`, `d2`, `bpmn`, `excalidraw`, `nomnoml`, `wavedrom` and more. The preview restyles text with your preview font, and monospaced text with your editor font, while the SVG itself stays exactly as Kroki returned it; diagrams that pin text widths (such as PlantUML) may look slightly squeezed. The first render shows a placeholder; the preview refreshes as soon as the diagram arrives, and results are cached until the source changes.
+Code blocks in any of [Kroki's diagram languages](https://kroki.io/#support) render as inline SVG on a white card: `plantuml`, `graphviz` or `dot`, `d2`, `bpmn`, `excalidraw`, `nomnoml`, `wavedrom` and more. The preview restyles text with your preview font, and monospaced text with your editor font, while the SVG itself stays exactly as Kroki returned it; diagrams that pin text widths (such as PlantUML) may look slightly squeezed. The first render shows a placeholder; the preview refreshes as soon as the diagram arrives, and results are cached until the source changes. If the white card clashes with a dark theme, set `markdownToolkit.kroki.darkMode` to invert diagram colors instead.
 
 ![PlantUML, Graphviz and D2 diagrams rendered by Kroki in the preview](media/screenshots/preview-scrolled.png)
 

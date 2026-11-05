@@ -57,7 +57,8 @@ function markListAsTaskList(tokens: Token[], itemIndex: number): void {
 export function taskListRule(state: StateCore): void {
 	// 核心状态没有按行切好的源码, 有任务项时才切一次
 	let lines: string[] | undefined;
-	const lineText = (number_: number): string => (lines ??= state.src.split(/\r?\n/))[number_] ?? "";
+	const lineText = (number_: number): string =>
+		(lines ??= state.src.split(/\r?\n/))[number_] ?? "";
 	const tokens = state.tokens;
 	for (let index = 2; index < tokens.length; index++) {
 		const inline = tokens[index];

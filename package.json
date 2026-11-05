@@ -128,6 +128,12 @@
 					"order": 13,
 					"markdownDescription": "%config.kroki.languages%"
 				},
+				"markdownToolkit.kroki.darkMode": {
+					"type": "boolean",
+					"default": false,
+					"order": 14,
+					"description": "%config.kroki.darkMode%"
+				},
 				"markdownToolkit.toc.minLevel": {
 					"type": "integer",
 					"default": 1,

@@ -24,7 +24,7 @@
 
 ## 用 Kroki 渲染 PlantUML、Graphviz、D2 等图表
 
-凡是用 [Kroki 支持的图表语言](https://kroki.io/#support)写的代码块，都会渲染成内联 SVG 并显示在白底卡片上：`plantuml`、`graphviz` 或 `dot`、`d2`、`bpmn`、`excalidraw`、`nomnoml`、`wavedrom` 等。预览时用 CSS 把文字换成预览字体、等宽文字换成编辑器字体，SVG 本身保持 Kroki 返回的原样；固定了文字宽度的图（如 PlantUML）文字可能略显拥挤。首次渲染先显示占位，图表返回后预览立即刷新；源码不变就一直使用缓存。
+凡是用 [Kroki 支持的图表语言](https://kroki.io/#support)写的代码块，都会渲染成内联 SVG 并显示在白底卡片上：`plantuml`、`graphviz` 或 `dot`、`d2`、`bpmn`、`excalidraw`、`nomnoml`、`wavedrom` 等。预览时用 CSS 把文字换成预览字体、等宽文字换成编辑器字体，SVG 本身保持 Kroki 返回的原样；固定了文字宽度的图（如 PlantUML）文字可能略显拥挤。首次渲染先显示占位，图表返回后预览立即刷新；源码不变就一直使用缓存。白底卡片与深色主题不搭时，打开 `markdownToolkit.kroki.darkMode`，图表配色会反相显示以融入编辑器。
 
 ![预览中由 Kroki 渲染的 PlantUML、Graphviz 和 D2 图表](../media/screenshots/preview-scrolled.png)
 

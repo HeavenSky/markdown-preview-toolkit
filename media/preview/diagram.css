@@ -13,6 +13,13 @@
 	box-sizing: border-box;
 }
 
+/* markdownToolkit.kroki.darkMode 开启时, 深色主题下整卡反相再加色相旋转, 图表融入编辑器底色;
+   反相只作用于 SVG(含白底), 右上角菜单保持主题原生配色。 */
+.vscode-dark .mtk-kroki-dark > svg,
+.vscode-high-contrast .mtk-kroki-dark > svg {
+	filter: invert(1) hue-rotate(180deg);
+}
+
 .mtk-kroki-pending {
 	padding: 24px;
 	border: 1px dashed var(--vscode-editorWidget-border, rgba(128, 128, 128, 0.4));

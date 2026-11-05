@@ -111,7 +111,9 @@ describe("源码回写", () => {
 		expect(token("- [ ] A")).not.toBe(token("- [ ] B"));
 		expect(token("- [ ] A")).not.toBe(token("- [x] A", true));
 		expect(token("- [ ] A")).not.toBe(token("- [ ] A", false, 4));
-		expect(token("- [ ] A")).not.toBe(toggleToken("secret-2", "file:///a.md", 3, false, "- [ ] A"));
+		expect(token("- [ ] A")).not.toBe(
+			toggleToken("secret-2", "file:///a.md", 3, false, "- [ ] A")
+		);
 		expect(token("- [ ] A")).not.toBe(
 			toggleToken("secret-1", "file:///b.md", 3, false, "- [ ] A")
 		);

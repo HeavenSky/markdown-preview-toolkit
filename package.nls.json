@@ -6,6 +6,7 @@
 	"config.kroki.server": "Kroki server URL. The default public server receives the source of every diagram you preview; point this at a self-hosted server such as `http://localhost:8000` to keep diagrams on your machine.",
 	"config.kroki.timeout": "How long to wait for the Kroki server, in milliseconds.",
 	"config.kroki.languages": "Map extra code block languages to Kroki diagram types, for example `{ \"uml\": \"plantuml\" }`. Map a language to an empty string to stop rendering it.",
+	"config.kroki.darkMode": "Invert diagram colors in dark themes so they blend with the editor instead of sitting on a white card. Colored elements may shift hue slightly.",
 	"config.toc.minLevel": "Smallest heading level included in the table of contents.",
 	"config.toc.maxLevel": "Largest heading level included in the table of contents.",
 	"config.toc.sidebar": "Show a collapsible table of contents on the right side of the preview.",

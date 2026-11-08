@@ -15,14 +15,21 @@ import {
 import { krokiPrefix } from "./svg";
 
 const SECTION = "markdownToolkit.kroki";
-const DEFAULT_TIMEOUT_MS = 15_000;
 const MIN_TIMEOUT_MS = 1_000;
 
+/**
+ * 默认超时取自 manifest (`inspect().defaultValue`), 不在源码里留第二份字面量;
+ * 连 manifest 都读不到时退到最小值, 保证永远是一个可用的正超时。
+ */
 function readTimeoutMs(config: vscode.WorkspaceConfiguration): number {
-	const value = config.get<number>("timeout");
-	return typeof value === "number" && Number.isFinite(value)
-		? Math.max(MIN_TIMEOUT_MS, value)
-		: DEFAULT_TIMEOUT_MS;
+	const value = config.get("timeout");
+	if (typeof value === "number" && Number.isFinite(value)) {
+		return Math.max(MIN_TIMEOUT_MS, value);
+	}
+	const fallback = config.inspect("timeout")?.defaultValue;
+	return typeof fallback === "number" && Number.isFinite(fallback)
+		? Math.max(MIN_TIMEOUT_MS, fallback)
+		: MIN_TIMEOUT_MS;
 }
 
 function describeFailure(failure: KrokiFailure, server: string): string {
@@ -62,7 +69,7 @@ export interface KrokiFeature {
 
 export function registerKroki(context: vscode.ExtensionContext, tools: DiagramTools): KrokiFeature {
 	let settings: KrokiSettings | undefined;
-	let timeoutMs = DEFAULT_TIMEOUT_MS;
+	let timeoutMs = 0;
 	const readSettings = (): KrokiSettings => {
 		if (!settings) {
 			const config = vscode.workspace.getConfiguration(SECTION);

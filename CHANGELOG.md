@@ -2,6 +2,10 @@
 
 **English** · [简体中文](./zh/CHANGELOG.md)
 
+## v0.0.4 2026-11-08
+
+- Maintenance: the Kroki timeout default is now read from the extension manifest instead of a second copy in the source, and the release check validates that every setting's declared default stays consistent with the schema, so the Settings UI can no longer drift from actual behavior.
+
 ## v0.0.3 2026-11-05
 
 - Security: task toggle links are now signed with a per-session token bound to the exact task line. Links that were forged, copied across documents or left over from an outdated preview are rejected, and the toggle settings are re-checked when a link is used, so a stale link can no longer check a different task that happens to sit on the same line.

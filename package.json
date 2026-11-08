@@ -1,7 +1,7 @@
 {
 	"name": "markdown-preview-toolkit",
 	"displayName": "Markdown Preview Toolkit",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "%extension.description%",
 	"categories": [
 		"Other",
